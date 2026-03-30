@@ -16,7 +16,7 @@ Bitbucket OpenAPI spec (live)
 ```
 
 Hand-written code lives in:
-- `cmd/main.go` — entry point, root Cobra command
+- `cmd/bb-cli/main.go` — entry point, root Cobra command
 - `internal/client/auth.go` — Resty client + auth (Basic or Bearer)
 - `internal/handlers/dispatch.go` — generic HTTP dispatcher with pagination
 - `internal/output/format.go` — table / json / id rendering
@@ -39,7 +39,7 @@ Hand-written code lives in:
 ```bash
 go build ./...          # build
 go test ./...           # test
-go run ./cmd/... --help # run locally
+go run ./cmd/bb-cli --help # run locally
 ```
 
 ## Code Generation (manual)
@@ -57,5 +57,5 @@ go run scripts/gen_commands/main.go schema/pr-schema.yaml internal/commands/comm
 - **Flags**: path params → `--workspace`, `--repo-slug`; body fields → flattened with dots (`--source-branch` maps to `source.branch`)
 - **Output**: `--output table|json|id`; table is default
 - **Pagination**: `--all` flag auto-follows cursor-based `next` links
-- **Versioning**: `vYYYY.MM.DD[.BUILD]` — calendar-based, set by CI
+- **Versioning**: semver `v1.x.y` — compatible with `go install` / pkg.go.dev; patch is auto-bumped by CI on schema changes
 - **CI**: Daily cron at 03:00 UTC fetches spec, regenerates, tests, and releases if changed

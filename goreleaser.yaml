@@ -7,7 +7,7 @@ before:
     - go mod tidy
 
 builds:
-  - main: ./cmd/main.go
+  - main: ./cmd/bb-cli
     binary: bb-cli
     env:
       - CGO_ENABLED=0
@@ -31,6 +31,11 @@ archives:
 checksum:
   name_template: checksums.txt
 
+release:
+  github:
+    owner: FabianSchurig
+    name: bitbucket-cli
+
 changelog:
   sort: asc
   filters:
@@ -38,3 +43,9 @@ changelog:
       - '^docs:'
       - '^test:'
       - '^chore:'
+
+gomod:
+  proxy: true
+  env:
+    - GOPROXY=https://proxy.golang.org,direct
+    - GONOSUMCHECK=
