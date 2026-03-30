@@ -67,20 +67,21 @@ jobs:
           git config user.name "bb-cli-bot"
           git config user.email "bot@github.com"
           git add schema/ internal/generated/ internal/commands/
-          VERSION="v$(date +%Y.%m.%d)"
-          # Append build number if tag already exists for today
-          if git rev-parse "$VERSION" >/dev/null 2>&1; then
-            BUILD=$(git tag --list "${VERSION}.*" | wc -l)
-            VERSION="${VERSION}.${BUILD}"
+
+          # Determine next semver patch based on latest tag
+          LATEST=$(git tag --list 'v*' --sort=-v:refname | head -n1)
+          if [ -z "$LATEST" ]; then
+            VERSION="v1.0.0"
+          else
+            # Strip leading 'v', split, bump patch
+            MAJOR=$(echo "$LATEST" | sed 's/^v//' | cut -d. -f1)
+            MINOR=$(echo "$LATEST" | sed 's/^v//' | cut -d. -f2)
+            PATCH=$(echo "$LATEST" | sed 's/^v//' | cut -d. -f3)
+            PATCH=$((PATCH + 1))
+            VERSION="v${MAJOR}.${MINOR}.${PATCH}"
           fi
+
           git commit -m "chore: schema sync ${VERSION}"
           git tag "$VERSION"
           git push --follow-tags
-
-      - name: Release (goreleaser)
-        if: steps.diff.outputs.changed == 'true'
-        uses: goreleaser/goreleaser-action@v6
-        with:
-          args: release --clean
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # The tag push triggers the Release workflow (release.yml)

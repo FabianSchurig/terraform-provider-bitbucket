@@ -1,5 +1,25 @@
 # bitbucket-cli
 
+## Installation
+
+### Go install (recommended)
+
+```bash
+go install github.com/FabianSchurig/bitbucket-cli/cmd/bb-cli@latest
+```
+
+### Download binary
+
+Download a pre-built binary from the [GitHub Releases](https://github.com/FabianSchurig/bitbucket-cli/releases) page. Archives are available for Linux, macOS, and Windows (amd64/arm64).
+
+### Build from source
+
+```bash
+git clone https://github.com/FabianSchurig/bitbucket-cli.git
+cd bitbucket-cli
+go build -o bb-cli ./cmd/...
+```
+
 ## Contributing
 
 ### Dev Container
@@ -27,7 +47,7 @@ After the container starts you will have:
 #### Running the CLI
 
 ```bash
-go run ./cmd/... --help
+go run ./cmd/bb-cli --help
 ```
 
 #### Running the scripts

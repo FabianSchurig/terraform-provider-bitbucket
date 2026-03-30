@@ -9,7 +9,7 @@ applyTo: ["internal/client/**", "internal/handlers/**", "internal/output/**"]
 - **Keep it generic**: `handlers.Dispatch()` handles all API operations uniformly. Avoid per-endpoint branching.
 - **Minimize surface area**: The less hand-written code, the less maintenance. Only add code that benefits all operations.
 - **Resty for HTTP**: Use `go-resty/resty/v2` — do not introduce additional HTTP libraries.
-- **Cobra for CLI**: Use `spf13/cobra` — the root command is in `cmd/main.go`, subcommands are generated.
+- **Cobra for CLI**: Use `spf13/cobra` — the root command is in `cmd/bb-cli/main.go`, subcommands are generated.
 
 ## Module responsibilities
 
