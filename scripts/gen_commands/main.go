@@ -696,6 +696,10 @@ func buildCommand(pe pathEntry, entry methodOp, schema *Schema) CommandData {
 		flags = injectPaginationFlags(flags)
 	}
 
+	// Two-pass camelCase → kebab-case conversion.
+	// Pass 1 (camelUpperBoundary): splits lower→upper boundaries (e.g. "getA" → "get-A").
+	// Pass 2 (camelUpperRun): splits consecutive uppercase runs (e.g. "AWebhook" → "A-Webhook").
+	// Together they handle single-letter words like "A" in "getAWebhookResource" → "get-a-webhook-resource".
 	kebab := camelUpperBoundary.ReplaceAllString(op.OperationID, "${1}-${2}")
 	kebab = strings.ToLower(camelUpperRun.ReplaceAllString(kebab, "${1}-${2}"))
 
