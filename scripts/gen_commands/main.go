@@ -15,7 +15,9 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
+	"go/format"
 	"os"
 	"text/template"
 
@@ -167,6 +169,7 @@ return cmd
 // new{{$.CommandName}}{{toCamel .OperationID}}Cmd returns the "{{$.CommandUse}} {{.Use}}" cobra command.
 // operationId: {{.OperationID}}
 func new{{$.CommandName}}{{toCamel .OperationID}}Cmd() *cobra.Command {
+{{- if or .Flags .BodyFields .HasBody .Paginated}}
 var (
 {{- range .Flags}}
 {{.GoName}} {{.GoType}}
@@ -181,6 +184,7 @@ body string
 all bool
 {{- end}}
 )
+{{- end}}
 
 cmd := &cobra.Command{
 Use:   "{{.Use}}",
@@ -306,14 +310,18 @@ func generate(data FileData, outputPath string) error {
 		return fmt.Errorf("parsing template: %w", err)
 	}
 
-	f, err := os.Create(outputPath)
-	if err != nil {
-		return fmt.Errorf("creating output file: %w", err)
-	}
-	defer f.Close()
-
-	if err := tmpl.Execute(f, data); err != nil {
+	var buf bytes.Buffer
+	if err := tmpl.Execute(&buf, data); err != nil {
 		return fmt.Errorf("executing template: %w", err)
+	}
+
+	formatted, err := format.Source(buf.Bytes())
+	if err != nil {
+		return fmt.Errorf("formatting generated code: %w", err)
+	}
+
+	if err := os.WriteFile(outputPath, formatted, 0o644); err != nil {
+		return fmt.Errorf("writing output file: %w", err)
 	}
 	return nil
 }
