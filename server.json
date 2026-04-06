@@ -1,11 +1,35 @@
 {
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.fabianschurig/bitbucket-mcp",
+  "description": "Bitbucket Cloud MCP in Go: complete API auto-generated from spec, customizable prompts.",
+  "version": "0.0.0",
+  "title": "Bitbucket MCP",
+  "repository": {
+    "url": "https://github.com/FabianSchurig/bitbucket-cli",
+    "source": "github"
+  },
   "packages": [
     {
-      "registry_type": "oci",
-      "registry_base_url": "https://ghcr.io",
-      "identifier": "fabianschurig/bitbucket-mcp",
-      "version": "0.0.0"
+      "registryType": "oci",
+      "registryBaseUrl": "https://ghcr.io",
+      "identifier": "ghcr.io/fabianschurig/bitbucket-mcp:0.0.0",
+      "version": "0.0.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "BITBUCKET_USERNAME",
+          "description": "Your Bitbucket username/ email (required for Basic auth, omit for workspace/repo access tokens)",
+          "isRequired": false
+        },
+        {
+          "name": "BITBUCKET_TOKEN",
+          "description": "Your Bitbucket API token or OAuth2 access token",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
     }
   ]
 }
