@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <clipPath id="bucketMask">
+      <path d="M 50,20 L 462,20 A 20,20 0 0,1 482,40 L 437,460 A 20,20 0 0,1 417,480 L 95,480 A 20,20 0 0,1 75,460 L 30,40 A 20,20 0 0,1 50,20 Z" />
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#bucketMask)">
+    <rect width="512" height="512" fill="#0A50D0" />
+
+    <polygon points="0,0 512,0 512,180 336,180 201,330 25,512 0,512" fill="#2D7FF9" />
+  </g>
+
+  <polygon points="176,180 336,180 311,330 201,330" fill="#FFFFFF" />
+
+  <g fill="#FFFFFF" opacity="0.25">
+    <circle cx="395" cy="395" r="22" />
+    <rect x="390" y="363" width="10" height="64" rx="2" transform="rotate(0 395 395)" />
+    <rect x="390" y="363" width="10" height="64" rx="2" transform="rotate(45 395 395)" />
+    <rect x="390" y="363" width="10" height="64" rx="2" transform="rotate(90 395 395)" />
+    <rect x="390" y="363" width="10" height="64" rx="2" transform="rotate(135 395 395)" />
+  </g>
+  <circle cx="395" cy="395" r="14" fill="#0A50D0" />
+
+  <rect x="350" y="390" width="55" height="15" rx="4" fill="#FFFFFF" />
+  <circle cx="360" cy="397.5" r="3.5" fill="#0A50D0" />
+  
+  <rect x="350" y="412" width="55" height="15" rx="4" fill="#FFFFFF" />
+  <circle cx="360" cy="419.5" r="3.5" fill="#0A50D0" />
+  
+  <rect x="350" y="434" width="55" height="15" rx="4" fill="#FFFFFF" />
+  <circle cx="360" cy="441.5" r="3.5" fill="#0A50D0" />
+
+  <text x="335" y="448" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="58" fill="#FFFFFF" text-anchor="end" letter-spacing="1">MCP</text>
+</svg>
