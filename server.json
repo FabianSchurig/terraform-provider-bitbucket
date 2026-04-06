@@ -12,7 +12,6 @@
     {
       "registryType": "oci",
       "identifier": "ghcr.io/FabianSchurig/bitbucket-mcp:0.0.0",
-      "version": "0.0.0",
       "transport": {
         "type": "stdio"
       },
