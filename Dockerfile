@@ -1,9 +1,12 @@
 # ============================================================================
 # Dockerfile for bitbucket-cli
 #
-# Uses the hardened dhi.io/golang base image and builds binaries from source
-# using `go install` (GOPROXY=direct bypasses the module proxy to avoid cache
-# lag for newly released versions).
+# Uses a two-stage build per target:
+#   1. golang:1 (official, has git) — builds the binary with `go install`
+#   2. dhi.io/golang:1 (hardened runtime) — receives only the compiled binary
+#
+# The hardened base image has no package manager, so we cannot install git
+# into it directly; the builder stage handles all compilation.
 #
 # Targets:
 #   bb-cli  — Bitbucket CLI
@@ -15,28 +18,37 @@
 #   docker build --target bb-mcp -t bb-mcp .
 #   docker build --build-arg VERSION=v1.0.0 -t bb-mcp .  # pin a version
 # Extending this Dockerfile:
-#   To add a new binary target, add a new stage that installs the binary
-#   with `go install` (use the existing stages as a template), then add
+#   To add a new binary target, add a new build+runtime stage pair, then add
 #   the target to the build matrix in .github/workflows/docker.yml.
 # ============================================================================
 
-# --- bb-cli: hardened image for the Bitbucket CLI ---
-FROM dhi.io/golang:1 AS bb-cli
+# --- bb-cli: build stage ---
+FROM golang:1 AS build-bb-cli
 
 ARG VERSION=latest
 
 # Use GOPROXY=direct so Go fetches directly from GitHub, bypassing the slow proxy cache
 RUN GOPROXY=direct go install github.com/FabianSchurig/bitbucket-cli/cmd/bb-cli@${VERSION}
 
+# --- bb-cli: hardened runtime ---
+FROM dhi.io/golang:1 AS bb-cli
+
+COPY --from=build-bb-cli /go/bin/bb-cli /usr/local/bin/bb-cli
+
 ENTRYPOINT ["bb-cli"]
 
-# --- bb-mcp: hardened image for the Bitbucket MCP server ---
-FROM dhi.io/golang:1 AS bb-mcp
+# --- bb-mcp: build stage ---
+FROM golang:1 AS build-bb-mcp
 
 ARG VERSION=latest
 
 # Use GOPROXY=direct so Go fetches directly from GitHub, bypassing the slow proxy cache
 RUN GOPROXY=direct go install github.com/FabianSchurig/bitbucket-cli/cmd/bb-mcp@${VERSION}
+
+# --- bb-mcp: hardened runtime ---
+FROM dhi.io/golang:1 AS bb-mcp
+
+COPY --from=build-bb-mcp /go/bin/bb-mcp /usr/local/bin/bb-mcp
 
 LABEL io.modelcontextprotocol.server.name="io.github.fabianschurig/bitbucket-mcp"
 
