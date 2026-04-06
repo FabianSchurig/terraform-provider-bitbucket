@@ -107,8 +107,16 @@ func registerAllTools(server *mcp.Server, cfg *config.Config) {
 		}
 
 		// Override: Replace description if configured.
-		if override, ok := cfg.ToolOverrides[filtered.Name]; ok && override.Description != "" {
-			filtered.Description = override.Description
+		if override, ok := cfg.ToolOverrides[filtered.Name]; ok {
+			if override.Description != "" {
+				filtered.Description = override.Description
+			}
+			// Apply per-operation description overrides.
+			for i, op := range filtered.Operations {
+				if opOverride, ok := override.Operations[op.OperationID]; ok && opOverride.Description != "" {
+					filtered.Operations[i].Description = opOverride.Description
+				}
+			}
 		}
 
 		mcptools.RegisterToolGroup(server, filtered)
