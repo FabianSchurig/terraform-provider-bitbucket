@@ -1,0 +1,24 @@
+{
+  "name": "bitbucket-mcp-marketplace",
+  "owner": {
+    "name": "Fabian Schurig",
+    "email": "11216482+FabianSchurig@users.noreply.github.com"
+  },
+  "metadata": {
+    "description": "Bitbucket Cloud MCP server for Cursor — complete Bitbucket API auto-generated from the live OpenAPI spec.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "bitbucket",
+      "source": ".",
+      "description": "Bitbucket Cloud MCP server — pull requests, repositories, pipelines, issues, and more as Cursor tools.",
+      "category": "developer-tools",
+      "keywords": ["bitbucket", "mcp", "git", "devops", "pull-requests", "pipelines", "atlassian"],
+      "repository": "https://github.com/FabianSchurig/bitbucket-cli",
+      "homepage": "https://github.com/FabianSchurig/bitbucket-cli/blob/main/docs/mcp.md",
+      "license": "AGPL-3.0",
+      "logo": "docs/icon.svg"
+    }
+  ]
+}

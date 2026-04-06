@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "bitbucket": {
+      "command": "go",
+      "args": [
+        "run",
+        "github.com/FabianSchurig/bitbucket-cli/cmd/bb-mcp@v0.11.4"
+      ],
+      "env": {
+        "BITBUCKET_USERNAME": "${env:BITBUCKET_USERNAME}",
+        "BITBUCKET_TOKEN": "${env:BITBUCKET_TOKEN}"
+      }
+    }
+  }
+}

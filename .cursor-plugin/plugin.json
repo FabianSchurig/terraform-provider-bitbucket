@@ -1,0 +1,15 @@
+{
+  "name": "bitbucket",
+  "displayName": "Bitbucket MCP",
+  "version": "0.11.4",
+  "description": "Bitbucket Cloud MCP server for Cursor — complete Bitbucket API auto-generated from the live OpenAPI spec. Covers pull requests, repositories, pipelines, issues, commits, branches, tags, deployments, and more as native Cursor tools.",
+  "author": {
+    "name": "Fabian Schurig",
+    "email": "11216482+FabianSchurig@users.noreply.github.com"
+  },
+  "homepage": "https://github.com/FabianSchurig/bitbucket-cli/blob/main/docs/mcp.md",
+  "repository": "https://github.com/FabianSchurig/bitbucket-cli",
+  "license": "AGPL-3.0",
+  "keywords": ["bitbucket", "mcp", "atlassian", "git", "devops", "pull-requests", "pipelines", "ci-cd", "repositories"],
+  "logo": "docs/icon.svg"
+}
