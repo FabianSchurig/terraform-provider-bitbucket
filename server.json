@@ -1,6 +1,6 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.fabianschurig/bitbucket-mcp",
+  "name": "io.github.FabianSchurig/bitbucket-mcp",
   "description": "Bitbucket Cloud MCP in Go: complete API auto-generated from spec, customizable prompts.",
   "version": "0.0.0",
   "title": "Bitbucket MCP",
@@ -12,7 +12,7 @@
     {
       "registryType": "oci",
       "registryBaseUrl": "https://ghcr.io",
-      "identifier": "ghcr.io/fabianschurig/bitbucket-mcp:0.0.0",
+      "identifier": "ghcr.io/FabianSchurig/bitbucket-mcp:0.0.0",
       "version": "0.0.0",
       "transport": {
         "type": "stdio"
