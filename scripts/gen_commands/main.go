@@ -190,9 +190,25 @@ Use:   "{{.Use}}",
 Short: {{goStringLit .Short}},
 Long:  {{goStringLit .Long}},
 RunE: func(cmd *cobra.Command, args []string) error {
+pathParams := map[string]string{
+{{- range .Flags}}
+{{- if eq .In "path"}}
+{{- if eq .GoType "int"}}
+"{{.RawName}}": strconv.Itoa({{.GoName}}),
+{{- else}}
+"{{.RawName}}": {{.GoName}},
+{{- end}}
+{{- end}}
+{{- end}}
+}
+handlers.InferRepoContext(pathParams)
 {{- range .Flags}}
 {{- if .Required}}
-{{- if eq .GoType "int"}}
+{{- if and (eq .In "path") (eq .GoType "string")}}
+if pathParams["{{.RawName}}"] == "" {
+return fmt.Errorf("--{{.Name}} is required")
+}
+{{- else if eq .GoType "int"}}
 if {{.GoName}} == 0 {
 return fmt.Errorf("--{{.Name}} is required")
 }
@@ -206,17 +222,6 @@ return fmt.Errorf("--{{.Name}} is required")
 c, err := client.NewClient()
 if err != nil {
 return err
-}
-pathParams := map[string]string{
-{{- range .Flags}}
-{{- if eq .In "path"}}
-{{- if eq .GoType "int"}}
-"{{.RawName}}": strconv.Itoa({{.GoName}}),
-{{- else}}
-"{{.RawName}}": {{.GoName}},
-{{- end}}
-{{- end}}
-{{- end}}
 }
 queryParams := map[string]string{
 {{- range .Flags}}

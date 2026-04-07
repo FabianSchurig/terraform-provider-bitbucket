@@ -72,31 +72,32 @@ func newPropertiesGetCommitHostedPropertyValueCmd() *cobra.Command {
 		Short: `Get a commit application property`,
 		Long:  `Retrieve an [application property](/cloud/bitbucket/application-properties/) value stored against a commit.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if workspace == "" {
-				return fmt.Errorf("--workspace is required")
-			}
-			if repoSlug == "" {
-				return fmt.Errorf("--repo-slug is required")
-			}
-			if commit == "" {
-				return fmt.Errorf("--commit is required")
-			}
-			if appKey == "" {
-				return fmt.Errorf("--app-key is required")
-			}
-			if propertyName == "" {
-				return fmt.Errorf("--property-name is required")
-			}
-			c, err := client.NewClient()
-			if err != nil {
-				return err
-			}
 			pathParams := map[string]string{
 				"workspace":     workspace,
 				"repo_slug":     repoSlug,
 				"commit":        commit,
 				"app_key":       appKey,
 				"property_name": propertyName,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["workspace"] == "" {
+				return fmt.Errorf("--workspace is required")
+			}
+			if pathParams["repo_slug"] == "" {
+				return fmt.Errorf("--repo-slug is required")
+			}
+			if pathParams["commit"] == "" {
+				return fmt.Errorf("--commit is required")
+			}
+			if pathParams["app_key"] == "" {
+				return fmt.Errorf("--app-key is required")
+			}
+			if pathParams["property_name"] == "" {
+				return fmt.Errorf("--property-name is required")
+			}
+			c, err := client.NewClient()
+			if err != nil {
+				return err
 			}
 			queryParams := map[string]string{}
 			body := ""
@@ -135,31 +136,32 @@ func newPropertiesUpdateCommitHostedPropertyValueCmd() *cobra.Command {
 		Short: `Update a commit application property`,
 		Long:  `Update an [application property](/cloud/bitbucket/application-properties/) value stored against a commit.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if workspace == "" {
-				return fmt.Errorf("--workspace is required")
-			}
-			if repoSlug == "" {
-				return fmt.Errorf("--repo-slug is required")
-			}
-			if commit == "" {
-				return fmt.Errorf("--commit is required")
-			}
-			if appKey == "" {
-				return fmt.Errorf("--app-key is required")
-			}
-			if propertyName == "" {
-				return fmt.Errorf("--property-name is required")
-			}
-			c, err := client.NewClient()
-			if err != nil {
-				return err
-			}
 			pathParams := map[string]string{
 				"workspace":     workspace,
 				"repo_slug":     repoSlug,
 				"commit":        commit,
 				"app_key":       appKey,
 				"property_name": propertyName,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["workspace"] == "" {
+				return fmt.Errorf("--workspace is required")
+			}
+			if pathParams["repo_slug"] == "" {
+				return fmt.Errorf("--repo-slug is required")
+			}
+			if pathParams["commit"] == "" {
+				return fmt.Errorf("--commit is required")
+			}
+			if pathParams["app_key"] == "" {
+				return fmt.Errorf("--app-key is required")
+			}
+			if pathParams["property_name"] == "" {
+				return fmt.Errorf("--property-name is required")
+			}
+			c, err := client.NewClient()
+			if err != nil {
+				return err
 			}
 			queryParams := map[string]string{}
 			if body == "" {
@@ -204,31 +206,32 @@ func newPropertiesDeleteCommitHostedPropertyValueCmd() *cobra.Command {
 		Short: `Delete a commit application property`,
 		Long:  `Delete an [application property](/cloud/bitbucket/application-properties/) value stored against a commit.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if workspace == "" {
-				return fmt.Errorf("--workspace is required")
-			}
-			if repoSlug == "" {
-				return fmt.Errorf("--repo-slug is required")
-			}
-			if commit == "" {
-				return fmt.Errorf("--commit is required")
-			}
-			if appKey == "" {
-				return fmt.Errorf("--app-key is required")
-			}
-			if propertyName == "" {
-				return fmt.Errorf("--property-name is required")
-			}
-			c, err := client.NewClient()
-			if err != nil {
-				return err
-			}
 			pathParams := map[string]string{
 				"workspace":     workspace,
 				"repo_slug":     repoSlug,
 				"commit":        commit,
 				"app_key":       appKey,
 				"property_name": propertyName,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["workspace"] == "" {
+				return fmt.Errorf("--workspace is required")
+			}
+			if pathParams["repo_slug"] == "" {
+				return fmt.Errorf("--repo-slug is required")
+			}
+			if pathParams["commit"] == "" {
+				return fmt.Errorf("--commit is required")
+			}
+			if pathParams["app_key"] == "" {
+				return fmt.Errorf("--app-key is required")
+			}
+			if pathParams["property_name"] == "" {
+				return fmt.Errorf("--property-name is required")
+			}
+			c, err := client.NewClient()
+			if err != nil {
+				return err
 			}
 			queryParams := map[string]string{}
 			body := ""
@@ -265,27 +268,28 @@ func newPropertiesGetRepositoryHostedPropertyValueCmd() *cobra.Command {
 		Short: `Get a repository application property`,
 		Long:  `Retrieve an [application property](/cloud/bitbucket/application-properties/) value stored against a repository.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if workspace == "" {
-				return fmt.Errorf("--workspace is required")
-			}
-			if repoSlug == "" {
-				return fmt.Errorf("--repo-slug is required")
-			}
-			if appKey == "" {
-				return fmt.Errorf("--app-key is required")
-			}
-			if propertyName == "" {
-				return fmt.Errorf("--property-name is required")
-			}
-			c, err := client.NewClient()
-			if err != nil {
-				return err
-			}
 			pathParams := map[string]string{
 				"workspace":     workspace,
 				"repo_slug":     repoSlug,
 				"app_key":       appKey,
 				"property_name": propertyName,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["workspace"] == "" {
+				return fmt.Errorf("--workspace is required")
+			}
+			if pathParams["repo_slug"] == "" {
+				return fmt.Errorf("--repo-slug is required")
+			}
+			if pathParams["app_key"] == "" {
+				return fmt.Errorf("--app-key is required")
+			}
+			if pathParams["property_name"] == "" {
+				return fmt.Errorf("--property-name is required")
+			}
+			c, err := client.NewClient()
+			if err != nil {
+				return err
 			}
 			queryParams := map[string]string{}
 			body := ""
@@ -322,27 +326,28 @@ func newPropertiesUpdateRepositoryHostedPropertyValueCmd() *cobra.Command {
 		Short: `Update a repository application property`,
 		Long:  `Update an [application property](/cloud/bitbucket/application-properties/) value stored against a repository.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if workspace == "" {
-				return fmt.Errorf("--workspace is required")
-			}
-			if repoSlug == "" {
-				return fmt.Errorf("--repo-slug is required")
-			}
-			if appKey == "" {
-				return fmt.Errorf("--app-key is required")
-			}
-			if propertyName == "" {
-				return fmt.Errorf("--property-name is required")
-			}
-			c, err := client.NewClient()
-			if err != nil {
-				return err
-			}
 			pathParams := map[string]string{
 				"workspace":     workspace,
 				"repo_slug":     repoSlug,
 				"app_key":       appKey,
 				"property_name": propertyName,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["workspace"] == "" {
+				return fmt.Errorf("--workspace is required")
+			}
+			if pathParams["repo_slug"] == "" {
+				return fmt.Errorf("--repo-slug is required")
+			}
+			if pathParams["app_key"] == "" {
+				return fmt.Errorf("--app-key is required")
+			}
+			if pathParams["property_name"] == "" {
+				return fmt.Errorf("--property-name is required")
+			}
+			c, err := client.NewClient()
+			if err != nil {
+				return err
 			}
 			queryParams := map[string]string{}
 			if body == "" {
@@ -385,27 +390,28 @@ func newPropertiesDeleteRepositoryHostedPropertyValueCmd() *cobra.Command {
 		Short: `Delete a repository application property`,
 		Long:  `Delete an [application property](/cloud/bitbucket/application-properties/) value stored against a repository.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if workspace == "" {
-				return fmt.Errorf("--workspace is required")
-			}
-			if repoSlug == "" {
-				return fmt.Errorf("--repo-slug is required")
-			}
-			if appKey == "" {
-				return fmt.Errorf("--app-key is required")
-			}
-			if propertyName == "" {
-				return fmt.Errorf("--property-name is required")
-			}
-			c, err := client.NewClient()
-			if err != nil {
-				return err
-			}
 			pathParams := map[string]string{
 				"workspace":     workspace,
 				"repo_slug":     repoSlug,
 				"app_key":       appKey,
 				"property_name": propertyName,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["workspace"] == "" {
+				return fmt.Errorf("--workspace is required")
+			}
+			if pathParams["repo_slug"] == "" {
+				return fmt.Errorf("--repo-slug is required")
+			}
+			if pathParams["app_key"] == "" {
+				return fmt.Errorf("--app-key is required")
+			}
+			if pathParams["property_name"] == "" {
+				return fmt.Errorf("--property-name is required")
+			}
+			c, err := client.NewClient()
+			if err != nil {
+				return err
 			}
 			queryParams := map[string]string{}
 			body := ""
@@ -442,31 +448,32 @@ func newPropertiesGetPullRequestHostedPropertyValueCmd() *cobra.Command {
 		Short: `Get a pull request application property`,
 		Long:  `Retrieve an [application property](/cloud/bitbucket/application-properties/) value stored against a pull request.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if workspace == "" {
-				return fmt.Errorf("--workspace is required")
-			}
-			if repoSlug == "" {
-				return fmt.Errorf("--repo-slug is required")
-			}
-			if pullrequestId == "" {
-				return fmt.Errorf("--pullrequest-id is required")
-			}
-			if appKey == "" {
-				return fmt.Errorf("--app-key is required")
-			}
-			if propertyName == "" {
-				return fmt.Errorf("--property-name is required")
-			}
-			c, err := client.NewClient()
-			if err != nil {
-				return err
-			}
 			pathParams := map[string]string{
 				"workspace":      workspace,
 				"repo_slug":      repoSlug,
 				"pullrequest_id": pullrequestId,
 				"app_key":        appKey,
 				"property_name":  propertyName,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["workspace"] == "" {
+				return fmt.Errorf("--workspace is required")
+			}
+			if pathParams["repo_slug"] == "" {
+				return fmt.Errorf("--repo-slug is required")
+			}
+			if pathParams["pullrequest_id"] == "" {
+				return fmt.Errorf("--pullrequest-id is required")
+			}
+			if pathParams["app_key"] == "" {
+				return fmt.Errorf("--app-key is required")
+			}
+			if pathParams["property_name"] == "" {
+				return fmt.Errorf("--property-name is required")
+			}
+			c, err := client.NewClient()
+			if err != nil {
+				return err
 			}
 			queryParams := map[string]string{}
 			body := ""
@@ -505,31 +512,32 @@ func newPropertiesUpdatePullRequestHostedPropertyValueCmd() *cobra.Command {
 		Short: `Update a pull request application property`,
 		Long:  `Update an [application property](/cloud/bitbucket/application-properties/) value stored against a pull request.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if workspace == "" {
-				return fmt.Errorf("--workspace is required")
-			}
-			if repoSlug == "" {
-				return fmt.Errorf("--repo-slug is required")
-			}
-			if pullrequestId == "" {
-				return fmt.Errorf("--pullrequest-id is required")
-			}
-			if appKey == "" {
-				return fmt.Errorf("--app-key is required")
-			}
-			if propertyName == "" {
-				return fmt.Errorf("--property-name is required")
-			}
-			c, err := client.NewClient()
-			if err != nil {
-				return err
-			}
 			pathParams := map[string]string{
 				"workspace":      workspace,
 				"repo_slug":      repoSlug,
 				"pullrequest_id": pullrequestId,
 				"app_key":        appKey,
 				"property_name":  propertyName,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["workspace"] == "" {
+				return fmt.Errorf("--workspace is required")
+			}
+			if pathParams["repo_slug"] == "" {
+				return fmt.Errorf("--repo-slug is required")
+			}
+			if pathParams["pullrequest_id"] == "" {
+				return fmt.Errorf("--pullrequest-id is required")
+			}
+			if pathParams["app_key"] == "" {
+				return fmt.Errorf("--app-key is required")
+			}
+			if pathParams["property_name"] == "" {
+				return fmt.Errorf("--property-name is required")
+			}
+			c, err := client.NewClient()
+			if err != nil {
+				return err
 			}
 			queryParams := map[string]string{}
 			if body == "" {
@@ -574,31 +582,32 @@ func newPropertiesDeletePullRequestHostedPropertyValueCmd() *cobra.Command {
 		Short: `Delete a pull request application property`,
 		Long:  `Delete an [application property](/cloud/bitbucket/application-properties/) value stored against a pull request.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if workspace == "" {
-				return fmt.Errorf("--workspace is required")
-			}
-			if repoSlug == "" {
-				return fmt.Errorf("--repo-slug is required")
-			}
-			if pullrequestId == "" {
-				return fmt.Errorf("--pullrequest-id is required")
-			}
-			if appKey == "" {
-				return fmt.Errorf("--app-key is required")
-			}
-			if propertyName == "" {
-				return fmt.Errorf("--property-name is required")
-			}
-			c, err := client.NewClient()
-			if err != nil {
-				return err
-			}
 			pathParams := map[string]string{
 				"workspace":      workspace,
 				"repo_slug":      repoSlug,
 				"pullrequest_id": pullrequestId,
 				"app_key":        appKey,
 				"property_name":  propertyName,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["workspace"] == "" {
+				return fmt.Errorf("--workspace is required")
+			}
+			if pathParams["repo_slug"] == "" {
+				return fmt.Errorf("--repo-slug is required")
+			}
+			if pathParams["pullrequest_id"] == "" {
+				return fmt.Errorf("--pullrequest-id is required")
+			}
+			if pathParams["app_key"] == "" {
+				return fmt.Errorf("--app-key is required")
+			}
+			if pathParams["property_name"] == "" {
+				return fmt.Errorf("--property-name is required")
+			}
+			c, err := client.NewClient()
+			if err != nil {
+				return err
 			}
 			queryParams := map[string]string{}
 			body := ""
@@ -634,23 +643,24 @@ func newPropertiesRetrieveUserHostedPropertyValueCmd() *cobra.Command {
 		Short: `Get a user application property`,
 		Long:  `Retrieve an [application property](/cloud/bitbucket/application-properties/) value stored against a user.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if selectedUser == "" {
+			pathParams := map[string]string{
+				"selected_user": selectedUser,
+				"app_key":       appKey,
+				"property_name": propertyName,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["selected_user"] == "" {
 				return fmt.Errorf("--selected-user is required")
 			}
-			if appKey == "" {
+			if pathParams["app_key"] == "" {
 				return fmt.Errorf("--app-key is required")
 			}
-			if propertyName == "" {
+			if pathParams["property_name"] == "" {
 				return fmt.Errorf("--property-name is required")
 			}
 			c, err := client.NewClient()
 			if err != nil {
 				return err
-			}
-			pathParams := map[string]string{
-				"selected_user": selectedUser,
-				"app_key":       appKey,
-				"property_name": propertyName,
 			}
 			queryParams := map[string]string{}
 			body := ""
@@ -685,23 +695,24 @@ func newPropertiesUpdateUserHostedPropertyValueCmd() *cobra.Command {
 		Short: `Update a user application property`,
 		Long:  `Update an [application property](/cloud/bitbucket/application-properties/) value stored against a user.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if selectedUser == "" {
+			pathParams := map[string]string{
+				"selected_user": selectedUser,
+				"app_key":       appKey,
+				"property_name": propertyName,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["selected_user"] == "" {
 				return fmt.Errorf("--selected-user is required")
 			}
-			if appKey == "" {
+			if pathParams["app_key"] == "" {
 				return fmt.Errorf("--app-key is required")
 			}
-			if propertyName == "" {
+			if pathParams["property_name"] == "" {
 				return fmt.Errorf("--property-name is required")
 			}
 			c, err := client.NewClient()
 			if err != nil {
 				return err
-			}
-			pathParams := map[string]string{
-				"selected_user": selectedUser,
-				"app_key":       appKey,
-				"property_name": propertyName,
 			}
 			queryParams := map[string]string{}
 			if body == "" {
@@ -742,23 +753,24 @@ func newPropertiesDeleteUserHostedPropertyValueCmd() *cobra.Command {
 		Short: `Delete a user application property`,
 		Long:  `Delete an [application property](/cloud/bitbucket/application-properties/) value stored against a user.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if selectedUser == "" {
+			pathParams := map[string]string{
+				"selected_user": selectedUser,
+				"app_key":       appKey,
+				"property_name": propertyName,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["selected_user"] == "" {
 				return fmt.Errorf("--selected-user is required")
 			}
-			if appKey == "" {
+			if pathParams["app_key"] == "" {
 				return fmt.Errorf("--app-key is required")
 			}
-			if propertyName == "" {
+			if pathParams["property_name"] == "" {
 				return fmt.Errorf("--property-name is required")
 			}
 			c, err := client.NewClient()
 			if err != nil {
 				return err
-			}
-			pathParams := map[string]string{
-				"selected_user": selectedUser,
-				"app_key":       appKey,
-				"property_name": propertyName,
 			}
 			queryParams := map[string]string{}
 			body := ""

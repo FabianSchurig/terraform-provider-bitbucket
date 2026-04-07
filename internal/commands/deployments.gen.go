@@ -76,19 +76,20 @@ func newDeploymentsListRepositoryDeployKeysCmd() *cobra.Command {
 		Short: `List repository deploy keys`,
 		Long:  `Returns all deploy-keys belonging to a repository.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if repoSlug == "" {
+			pathParams := map[string]string{
+				"repo_slug": repoSlug,
+				"workspace": workspace,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["repo_slug"] == "" {
 				return fmt.Errorf("--repo-slug is required")
 			}
-			if workspace == "" {
+			if pathParams["workspace"] == "" {
 				return fmt.Errorf("--workspace is required")
 			}
 			c, err := client.NewClient()
 			if err != nil {
 				return err
-			}
-			pathParams := map[string]string{
-				"repo_slug": repoSlug,
-				"workspace": workspace,
 			}
 			queryParams := map[string]string{
 				"page":    strconv.Itoa(page),
@@ -126,19 +127,20 @@ func newDeploymentsAddARepositoryDeployKeyCmd() *cobra.Command {
 		Short: `Add a repository deploy key`,
 		Long:  "Create a new deploy key in a repository. Note: If authenticating a deploy key\nwith an OAuth consumer, any changes to the OAuth consumer will subsequently\ninvalidate the deploy key.\n\n\nExample:\n```\n$ curl -X POST \\\n-H \"Authorization <auth header>\" \\\n-H \"Content-type: application/json\" \\\nhttps://api.bitbucket.org/2.0/repositories/mleu/test/deploy-keys -d \\\n'{\n    \"key\": \"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAK/b1cHHDr/TEV1JGQl+WjCwStKG6Bhrv0rFpEsYlyTBm1fzN0VOJJYn4ZOPCPJwqse6fGbXntEs+BbXiptR+++HycVgl65TMR0b5ul5AgwrVdZdT7qjCOCgaSV74/9xlHDK8oqgGnfA7ZoBBU+qpVyaloSjBdJfLtPY/xqj4yHnXKYzrtn/uFc4Kp9Tb7PUg9Io3qohSTGJGVHnsVblq/rToJG7L5xIo0OxK0SJSQ5vuId93ZuFZrCNMXj8JDHZeSEtjJzpRCBEXHxpOPhAcbm4MzULgkFHhAVgp4JbkrT99/wpvZ7r9AdkTg7HGqL3rlaDrEcWfL7Lu6TnhBdq5 mleu@C02W454JHTD8\",\n    \"label\": \"mydeploykey\"\n}'\n```",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if repoSlug == "" {
+			pathParams := map[string]string{
+				"repo_slug": repoSlug,
+				"workspace": workspace,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["repo_slug"] == "" {
 				return fmt.Errorf("--repo-slug is required")
 			}
-			if workspace == "" {
+			if pathParams["workspace"] == "" {
 				return fmt.Errorf("--workspace is required")
 			}
 			c, err := client.NewClient()
 			if err != nil {
 				return err
-			}
-			pathParams := map[string]string{
-				"repo_slug": repoSlug,
-				"workspace": workspace,
 			}
 			queryParams := map[string]string{}
 			body := ""
@@ -171,23 +173,24 @@ func newDeploymentsGetARepositoryDeployKeyCmd() *cobra.Command {
 		Short: `Get a repository deploy key`,
 		Long:  `Returns the deploy key belonging to a specific key.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if keyId == "" {
+			pathParams := map[string]string{
+				"key_id":    keyId,
+				"repo_slug": repoSlug,
+				"workspace": workspace,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["key_id"] == "" {
 				return fmt.Errorf("--key-id is required")
 			}
-			if repoSlug == "" {
+			if pathParams["repo_slug"] == "" {
 				return fmt.Errorf("--repo-slug is required")
 			}
-			if workspace == "" {
+			if pathParams["workspace"] == "" {
 				return fmt.Errorf("--workspace is required")
 			}
 			c, err := client.NewClient()
 			if err != nil {
 				return err
-			}
-			pathParams := map[string]string{
-				"key_id":    keyId,
-				"repo_slug": repoSlug,
-				"workspace": workspace,
 			}
 			queryParams := map[string]string{}
 			body := ""
@@ -221,23 +224,24 @@ func newDeploymentsUpdateARepositoryDeployKeyCmd() *cobra.Command {
 		Short: `Update a repository deploy key`,
 		Long:  "Create a new deploy key in a repository.\n\nThe same key needs to be passed in but the comment and label can change.\n\nExample:\n```\n$ curl -X PUT \\\n-H \"Authorization <auth header>\" \\\n-H \"Content-type: application/json\" \\\nhttps://api.bitbucket.org/2.0/repositories/mleu/test/deploy-keys/1234 -d \\\n'{\n    \"label\": \"newlabel\",\n    \"key\": \"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAK/b1cHHDr/TEV1JGQl+WjCwStKG6Bhrv0rFpEsYlyTBm1fzN0VOJJYn4ZOPCPJwqse6fGbXntEs+BbXiptR+++HycVgl65TMR0b5ul5AgwrVdZdT7qjCOCgaSV74/9xlHDK8oqgGnfA7ZoBBU+qpVyaloSjBdJfLtPY/xqj4yHnXKYzrtn/uFc4Kp9Tb7PUg9Io3qohSTGJGVHnsVblq/rToJG7L5xIo0OxK0SJSQ5vuId93ZuFZrCNMXj8JDHZeSEtjJzpRCBEXHxpOPhAcbm4MzULgkFHhAVgp4JbkrT99/wpvZ7r9AdkTg7HGqL3rlaDrEcWfL7Lu6TnhBdq5 newcomment\",\n}'\n```",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if keyId == "" {
+			pathParams := map[string]string{
+				"key_id":    keyId,
+				"repo_slug": repoSlug,
+				"workspace": workspace,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["key_id"] == "" {
 				return fmt.Errorf("--key-id is required")
 			}
-			if repoSlug == "" {
+			if pathParams["repo_slug"] == "" {
 				return fmt.Errorf("--repo-slug is required")
 			}
-			if workspace == "" {
+			if pathParams["workspace"] == "" {
 				return fmt.Errorf("--workspace is required")
 			}
 			c, err := client.NewClient()
 			if err != nil {
 				return err
-			}
-			pathParams := map[string]string{
-				"key_id":    keyId,
-				"repo_slug": repoSlug,
-				"workspace": workspace,
 			}
 			queryParams := map[string]string{}
 			body := ""
@@ -271,23 +275,24 @@ func newDeploymentsDeleteARepositoryDeployKeyCmd() *cobra.Command {
 		Short: `Delete a repository deploy key`,
 		Long:  `This deletes a deploy key from a repository.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if keyId == "" {
+			pathParams := map[string]string{
+				"key_id":    keyId,
+				"repo_slug": repoSlug,
+				"workspace": workspace,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["key_id"] == "" {
 				return fmt.Errorf("--key-id is required")
 			}
-			if repoSlug == "" {
+			if pathParams["repo_slug"] == "" {
 				return fmt.Errorf("--repo-slug is required")
 			}
-			if workspace == "" {
+			if pathParams["workspace"] == "" {
 				return fmt.Errorf("--workspace is required")
 			}
 			c, err := client.NewClient()
 			if err != nil {
 				return err
-			}
-			pathParams := map[string]string{
-				"key_id":    keyId,
-				"repo_slug": repoSlug,
-				"workspace": workspace,
 			}
 			queryParams := map[string]string{}
 			body := ""
@@ -323,19 +328,20 @@ func newDeploymentsGetDeploymentsForRepositoryCmd() *cobra.Command {
 		Short: `List deployments`,
 		Long:  `Find deployments`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if workspace == "" {
+			pathParams := map[string]string{
+				"workspace": workspace,
+				"repo_slug": repoSlug,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["workspace"] == "" {
 				return fmt.Errorf("--workspace is required")
 			}
-			if repoSlug == "" {
+			if pathParams["repo_slug"] == "" {
 				return fmt.Errorf("--repo-slug is required")
 			}
 			c, err := client.NewClient()
 			if err != nil {
 				return err
-			}
-			pathParams := map[string]string{
-				"workspace": workspace,
-				"repo_slug": repoSlug,
 			}
 			queryParams := map[string]string{
 				"page":    strconv.Itoa(page),
@@ -374,23 +380,24 @@ func newDeploymentsGetDeploymentForRepositoryCmd() *cobra.Command {
 		Short: `Get a deployment`,
 		Long:  `Retrieve a deployment`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if workspace == "" {
+			pathParams := map[string]string{
+				"workspace":       workspace,
+				"repo_slug":       repoSlug,
+				"deployment_uuid": deploymentUuid,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["workspace"] == "" {
 				return fmt.Errorf("--workspace is required")
 			}
-			if repoSlug == "" {
+			if pathParams["repo_slug"] == "" {
 				return fmt.Errorf("--repo-slug is required")
 			}
-			if deploymentUuid == "" {
+			if pathParams["deployment_uuid"] == "" {
 				return fmt.Errorf("--deployment-uuid is required")
 			}
 			c, err := client.NewClient()
 			if err != nil {
 				return err
-			}
-			pathParams := map[string]string{
-				"workspace":       workspace,
-				"repo_slug":       repoSlug,
-				"deployment_uuid": deploymentUuid,
 			}
 			queryParams := map[string]string{}
 			body := ""
@@ -426,19 +433,20 @@ func newDeploymentsGetEnvironmentsForRepositoryCmd() *cobra.Command {
 		Short: `List environments`,
 		Long:  `Find environments`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if workspace == "" {
+			pathParams := map[string]string{
+				"workspace": workspace,
+				"repo_slug": repoSlug,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["workspace"] == "" {
 				return fmt.Errorf("--workspace is required")
 			}
-			if repoSlug == "" {
+			if pathParams["repo_slug"] == "" {
 				return fmt.Errorf("--repo-slug is required")
 			}
 			c, err := client.NewClient()
 			if err != nil {
 				return err
-			}
-			pathParams := map[string]string{
-				"workspace": workspace,
-				"repo_slug": repoSlug,
 			}
 			queryParams := map[string]string{
 				"page":    strconv.Itoa(page),
@@ -479,19 +487,20 @@ func newDeploymentsCreateEnvironmentCmd() *cobra.Command {
 		Short: `Create an environment`,
 		Long:  `Create an environment.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if workspace == "" {
+			pathParams := map[string]string{
+				"workspace": workspace,
+				"repo_slug": repoSlug,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["workspace"] == "" {
 				return fmt.Errorf("--workspace is required")
 			}
-			if repoSlug == "" {
+			if pathParams["repo_slug"] == "" {
 				return fmt.Errorf("--repo-slug is required")
 			}
 			c, err := client.NewClient()
 			if err != nil {
 				return err
-			}
-			pathParams := map[string]string{
-				"workspace": workspace,
-				"repo_slug": repoSlug,
 			}
 			queryParams := map[string]string{}
 			if body == "" {
@@ -539,23 +548,24 @@ func newDeploymentsGetEnvironmentForRepositoryCmd() *cobra.Command {
 		Short: `Get an environment`,
 		Long:  `Retrieve an environment`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if workspace == "" {
+			pathParams := map[string]string{
+				"workspace":        workspace,
+				"repo_slug":        repoSlug,
+				"environment_uuid": environmentUuid,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["workspace"] == "" {
 				return fmt.Errorf("--workspace is required")
 			}
-			if repoSlug == "" {
+			if pathParams["repo_slug"] == "" {
 				return fmt.Errorf("--repo-slug is required")
 			}
-			if environmentUuid == "" {
+			if pathParams["environment_uuid"] == "" {
 				return fmt.Errorf("--environment-uuid is required")
 			}
 			c, err := client.NewClient()
 			if err != nil {
 				return err
-			}
-			pathParams := map[string]string{
-				"workspace":        workspace,
-				"repo_slug":        repoSlug,
-				"environment_uuid": environmentUuid,
 			}
 			queryParams := map[string]string{}
 			body := ""
@@ -589,23 +599,24 @@ func newDeploymentsDeleteEnvironmentForRepositoryCmd() *cobra.Command {
 		Short: `Delete an environment`,
 		Long:  `Delete an environment`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if workspace == "" {
+			pathParams := map[string]string{
+				"workspace":        workspace,
+				"repo_slug":        repoSlug,
+				"environment_uuid": environmentUuid,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["workspace"] == "" {
 				return fmt.Errorf("--workspace is required")
 			}
-			if repoSlug == "" {
+			if pathParams["repo_slug"] == "" {
 				return fmt.Errorf("--repo-slug is required")
 			}
-			if environmentUuid == "" {
+			if pathParams["environment_uuid"] == "" {
 				return fmt.Errorf("--environment-uuid is required")
 			}
 			c, err := client.NewClient()
 			if err != nil {
 				return err
-			}
-			pathParams := map[string]string{
-				"workspace":        workspace,
-				"repo_slug":        repoSlug,
-				"environment_uuid": environmentUuid,
 			}
 			queryParams := map[string]string{}
 			body := ""
@@ -639,23 +650,24 @@ func newDeploymentsUpdateEnvironmentForRepositoryCmd() *cobra.Command {
 		Short: `Update an environment`,
 		Long:  `Update an environment`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if workspace == "" {
+			pathParams := map[string]string{
+				"workspace":        workspace,
+				"repo_slug":        repoSlug,
+				"environment_uuid": environmentUuid,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["workspace"] == "" {
 				return fmt.Errorf("--workspace is required")
 			}
-			if repoSlug == "" {
+			if pathParams["repo_slug"] == "" {
 				return fmt.Errorf("--repo-slug is required")
 			}
-			if environmentUuid == "" {
+			if pathParams["environment_uuid"] == "" {
 				return fmt.Errorf("--environment-uuid is required")
 			}
 			c, err := client.NewClient()
 			if err != nil {
 				return err
-			}
-			pathParams := map[string]string{
-				"workspace":        workspace,
-				"repo_slug":        repoSlug,
-				"environment_uuid": environmentUuid,
 			}
 			queryParams := map[string]string{}
 			body := ""
@@ -691,19 +703,20 @@ func newDeploymentsListProjectDeployKeysCmd() *cobra.Command {
 		Short: `List project deploy keys`,
 		Long:  `Returns all deploy keys belonging to a project.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if projectKey == "" {
+			pathParams := map[string]string{
+				"project_key": projectKey,
+				"workspace":   workspace,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["project_key"] == "" {
 				return fmt.Errorf("--project-key is required")
 			}
-			if workspace == "" {
+			if pathParams["workspace"] == "" {
 				return fmt.Errorf("--workspace is required")
 			}
 			c, err := client.NewClient()
 			if err != nil {
 				return err
-			}
-			pathParams := map[string]string{
-				"project_key": projectKey,
-				"workspace":   workspace,
 			}
 			queryParams := map[string]string{
 				"page":    strconv.Itoa(page),
@@ -741,19 +754,20 @@ func newDeploymentsCreateAProjectDeployKeyCmd() *cobra.Command {
 		Short: `Create a project deploy key`,
 		Long:  "Create a new deploy key in a project.\n\nExample:\n```\n$ curl -X POST \\\n-H \"Authorization <auth header>\" \\\n-H \"Content-type: application/json\" \\\nhttps://api.bitbucket.org/2.0/workspaces/standard/projects/TEST_PROJECT/deploy-keys/ -d \\\n'{\n    \"key\": \"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAK/b1cHHDr/TEV1JGQl+WjCwStKG6Bhrv0rFpEsYlyTBm1fzN0VOJJYn4ZOPCPJwqse6fGbXntEs+BbXiptR+++HycVgl65TMR0b5ul5AgwrVdZdT7qjCOCgaSV74/9xlHDK8oqgGnfA7ZoBBU+qpVyaloSjBdJfLtPY/xqj4yHnXKYzrtn/uFc4Kp9Tb7PUg9Io3qohSTGJGVHnsVblq/rToJG7L5xIo0OxK0SJSQ5vuId93ZuFZrCNMXj8JDHZeSEtjJzpRCBEXHxpOPhAcbm4MzULgkFHhAVgp4JbkrT99/wpvZ7r9AdkTg7HGqL3rlaDrEcWfL7Lu6TnhBdq5 mleu@C02W454JHTD8\",\n    \"label\": \"mydeploykey\"\n}'\n```",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if projectKey == "" {
+			pathParams := map[string]string{
+				"project_key": projectKey,
+				"workspace":   workspace,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["project_key"] == "" {
 				return fmt.Errorf("--project-key is required")
 			}
-			if workspace == "" {
+			if pathParams["workspace"] == "" {
 				return fmt.Errorf("--workspace is required")
 			}
 			c, err := client.NewClient()
 			if err != nil {
 				return err
-			}
-			pathParams := map[string]string{
-				"project_key": projectKey,
-				"workspace":   workspace,
 			}
 			queryParams := map[string]string{}
 			body := ""
@@ -786,23 +800,24 @@ func newDeploymentsGetAProjectDeployKeyCmd() *cobra.Command {
 		Short: `Get a project deploy key`,
 		Long:  `Returns the deploy key belonging to a specific key ID.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if keyId == "" {
+			pathParams := map[string]string{
+				"key_id":      keyId,
+				"project_key": projectKey,
+				"workspace":   workspace,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["key_id"] == "" {
 				return fmt.Errorf("--key-id is required")
 			}
-			if projectKey == "" {
+			if pathParams["project_key"] == "" {
 				return fmt.Errorf("--project-key is required")
 			}
-			if workspace == "" {
+			if pathParams["workspace"] == "" {
 				return fmt.Errorf("--workspace is required")
 			}
 			c, err := client.NewClient()
 			if err != nil {
 				return err
-			}
-			pathParams := map[string]string{
-				"key_id":      keyId,
-				"project_key": projectKey,
-				"workspace":   workspace,
 			}
 			queryParams := map[string]string{}
 			body := ""
@@ -836,23 +851,24 @@ func newDeploymentsDeleteADeployKeyFromAProjectCmd() *cobra.Command {
 		Short: `Delete a deploy key from a project`,
 		Long:  `This deletes a deploy key from a project.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if keyId == "" {
+			pathParams := map[string]string{
+				"key_id":      keyId,
+				"project_key": projectKey,
+				"workspace":   workspace,
+			}
+			handlers.InferRepoContext(pathParams)
+			if pathParams["key_id"] == "" {
 				return fmt.Errorf("--key-id is required")
 			}
-			if projectKey == "" {
+			if pathParams["project_key"] == "" {
 				return fmt.Errorf("--project-key is required")
 			}
-			if workspace == "" {
+			if pathParams["workspace"] == "" {
 				return fmt.Errorf("--workspace is required")
 			}
 			c, err := client.NewClient()
 			if err != nil {
 				return err
-			}
-			pathParams := map[string]string{
-				"key_id":      keyId,
-				"project_key": projectKey,
-				"workspace":   workspace,
 			}
 			queryParams := map[string]string{}
 			body := ""

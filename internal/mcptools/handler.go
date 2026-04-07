@@ -229,16 +229,32 @@ func resolveOperation(args map[string]any, opMap map[string]OperationDef) (strin
 func buildRequestParams(args map[string]any, op OperationDef, opID string) (map[string]string, map[string]string, *mcp.CallToolResult) {
 	pathParams := map[string]string{}
 	queryParams := map[string]string{}
+
 	for _, p := range op.Params {
 		val := extractStringParam(args, p.Name, p.Type)
-		if val == "" {
-			if p.Required {
-				return nil, nil, errResult(fmt.Sprintf("missing required parameter: %s (for operation %s)", p.Name, opID))
-			}
+		if val != "" {
+			assignRequestParam(pathParams, queryParams, p, val)
 			continue
 		}
-		assignRequestParam(pathParams, queryParams, p, val)
+		// Record empty path params so InferRepoContext can fill them.
+		if p.In == "path" {
+			pathParams[p.Name] = ""
+			continue
+		}
+		if p.Required {
+			return nil, nil, errResult(fmt.Sprintf("missing required parameter: %s (for operation %s)", p.Name, opID))
+		}
 	}
+
+	handlers.InferRepoContext(pathParams)
+
+	// Validate required path params after inference.
+	for _, p := range op.Params {
+		if p.Required && p.In == "path" && pathParams[p.Name] == "" {
+			return nil, nil, errResult(fmt.Sprintf("missing required parameter: %s (for operation %s)", p.Name, opID))
+		}
+	}
+
 	return pathParams, queryParams, nil
 }
 
