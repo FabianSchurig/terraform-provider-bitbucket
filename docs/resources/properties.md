@@ -26,7 +26,7 @@ Manages Bitbucket properties via the Bitbucket Cloud API.
 
 | Operation | Required Scopes |
 |-----------|----------------|
-| Read | — |
+| Read | `admin:workspace:bitbucket` |
 | Update | — |
 | Delete | — |
 
