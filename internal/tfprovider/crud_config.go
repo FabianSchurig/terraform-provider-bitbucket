@@ -110,7 +110,21 @@ var CRUDConfig = map[string]CRUDMapping{
 		List:   "getProjectBranchRestrictionsGroupedByBranch",
 	},
 	"branching-model": {
-		Read:   "getTheBranchingModelForARepository",
+		// The branching model always exists on a repository; there is no POST
+		// to create it. Map Create to the same PUT used for Update so the
+		// resource can be created (configured) via Terraform instead of failing
+		// with "Create not supported" — same convention as pipeline-config.
+		//
+		// Read uses the *settings* GET (not the active-model GET) so the read
+		// response shape matches the PUT body/schema: the settings endpoint
+		// returns branch_types as {enabled, kind, prefix} and development/
+		// production as {is_valid, name, use_mainbranch}, whereas the
+		// active-model endpoint omits `enabled` and uses a different
+		// development/production shape. Reading from the active model would
+		// produce values whose object type diverges from the schema derived
+		// from the PUT body, triggering a "Value Conversion Error".
+		Create: "updateTheBranchingModelConfigForARepository",
+		Read:   "getTheBranchingModelConfigForARepository",
 		Update: "updateTheBranchingModelConfigForARepository",
 	},
 	"commit-statuses": {
@@ -139,6 +153,10 @@ var CRUDConfig = map[string]CRUDMapping{
 		List: "searchWorkspace",
 	},
 	"properties": {
+		// Hosted property values are upserted via PUT; there is no separate
+		// POST. Map Create to the PUT so the resource is creatable via
+		// Terraform (same convention as pipeline-config / *-permissions).
+		Create: "updateRepositoryHostedPropertyValue",
 		Read:   "getRepositoryHostedPropertyValue",
 		Update: "updateRepositoryHostedPropertyValue",
 		Delete: "deleteRepositoryHostedPropertyValue",
@@ -191,6 +209,11 @@ var CRUDConfig = map[string]CRUDMapping{
 		Delete: "deleteDeploymentVariable",
 	},
 	"repo-group-permissions": {
+		// Explicit group permissions are upserted via PUT (no POST), exactly
+		// like repo-user-permissions. Map Create to the PUT so the resource is
+		// creatable via Terraform instead of failing with "Create not
+		// supported".
+		Create: "updateAnExplicitGroupPermissionForARepository",
 		Read:   "getAnExplicitGroupPermissionForARepository",
 		Update: "updateAnExplicitGroupPermissionForARepository",
 		Delete: "deleteAnExplicitGroupPermissionForARepository",
@@ -282,7 +305,12 @@ var CRUDConfig = map[string]CRUDMapping{
 		List:   "listRepositoryForks",
 	},
 	"project-branching-model": {
-		Read:   "getTheBranchingModelForAProject",
+		// Singleton config (always present); enable management via PUT-as-Create
+		// like branching-model / pipeline-config. Read uses the *settings* GET
+		// so the read response shape matches the PUT body/schema (see the
+		// repository "branching-model" mapping above for details).
+		Create: "updateTheBranchingModelConfigForAProject",
+		Read:   "getTheBranchingModelConfigForAProject",
 		Update: "updateTheBranchingModelConfigForAProject",
 	},
 	"pipeline-oidc": {
@@ -358,6 +386,10 @@ var CRUDConfig = map[string]CRUDMapping{
 		List: "listUserPermissionsInAWorkspace",
 	},
 	"repo-settings": {
+		// Repository settings inheritance is a singleton set via PUT; map
+		// Create to the PUT so the resource is creatable via Terraform
+		// (same convention as pipeline-config / branching-model).
+		Create: "setTheInheritanceStateForRepositorySettings",
 		Read:   "retrieveTheInheritanceStateForRepositorySettings",
 		Update: "setTheInheritanceStateForRepositorySettings",
 	},
