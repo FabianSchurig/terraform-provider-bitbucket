@@ -1121,9 +1121,6 @@ type Pullrequest struct {
 		Hash *string `json:"hash,omitempty"`
 	} `json:"merge_commit,omitempty"`
 
-	// Mergeable A boolean flag indicating whether the pull request passes all merge checks
-	Mergeable *bool `json:"mergeable,omitempty"`
-
 	// Participants         The list of users that are collaborating on this pull request.
 	//         Collaborators are user that:
 	//
@@ -3886,14 +3883,6 @@ func (a *Pullrequest) UnmarshalJSON(b []byte) error {
 		delete(object, "merge_commit")
 	}
 
-	if raw, found := object["mergeable"]; found {
-		err = json.Unmarshal(raw, &a.Mergeable)
-		if err != nil {
-			return fmt.Errorf("error reading 'mergeable': %w", err)
-		}
-		delete(object, "mergeable")
-	}
-
 	if raw, found := object["participants"]; found {
 		err = json.Unmarshal(raw, &a.Participants)
 		if err != nil {
@@ -4083,13 +4072,6 @@ func (a Pullrequest) MarshalJSON() ([]byte, error) {
 		object["merge_commit"], err = json.Marshal(a.MergeCommit)
 		if err != nil {
 			return nil, fmt.Errorf("error marshaling 'merge_commit': %w", err)
-		}
-	}
-
-	if a.Mergeable != nil {
-		object["mergeable"], err = json.Marshal(a.Mergeable)
-		if err != nil {
-			return nil, fmt.Errorf("error marshaling 'mergeable': %w", err)
 		}
 	}
 
