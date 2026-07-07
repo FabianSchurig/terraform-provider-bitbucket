@@ -953,6 +953,12 @@ func bodyFieldAttr(bf BodyFieldDef) schema.Attribute {
 	if desc == "" {
 		desc = bf.Path
 	}
+	// Body-derived attributes are always Optional, never Required — even when
+	// the OpenAPI schema marks the field required. The always-present
+	// `request_body` escape hatch is an equally valid way to supply the body,
+	// so requiring an individual typed field would reject every request_body
+	// based config at plan time ("argument X is required"). A genuinely missing
+	// field surfaces as an API 400 at apply time instead.
 	if bf.IsObject && len(bf.ItemFields) > 0 {
 		return schema.SingleNestedAttribute{
 			Description: desc,
@@ -982,21 +988,9 @@ func bodyFieldAttr(bf BodyFieldDef) schema.Attribute {
 		}
 	}
 	if bf.Type == "int" {
-		if bf.Required {
-			return schema.Int64Attribute{
-				Description: desc,
-				Required:    true,
-			}
-		}
 		return schema.Int64Attribute{
 			Description: desc,
 			Optional:    true,
-		}
-	}
-	if bf.Required {
-		return schema.StringAttribute{
-			Description: desc,
-			Required:    true,
 		}
 	}
 	return schema.StringAttribute{

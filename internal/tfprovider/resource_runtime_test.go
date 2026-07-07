@@ -232,6 +232,29 @@ func TestGenericResourceSchema(t *testing.T) {
 	}
 }
 
+// TestBodyFieldAttr_RequiredBecomesOptional guards that a body field the OpenAPI
+// schema marks required is still emitted as an Optional (not Required) Terraform
+// attribute. The always-present request_body escape hatch is an alternative way
+// to supply the body, so a Required typed field would reject every
+// request_body-based config at plan time ("argument X is required").
+func TestBodyFieldAttr_RequiredBecomesOptional(t *testing.T) {
+	strAttr, ok := bodyFieldAttr(BodyFieldDef{Path: "permission", Type: "string", Required: true}).(resourceschema.StringAttribute)
+	if !ok {
+		t.Fatalf("expected StringAttribute for required string body field")
+	}
+	if strAttr.Required || !strAttr.Optional {
+		t.Fatalf("required string body field must be Optional, got %#v", strAttr)
+	}
+
+	intAttr, ok := bodyFieldAttr(BodyFieldDef{Path: "value", Type: "int", Required: true}).(resourceschema.Int64Attribute)
+	if !ok {
+		t.Fatalf("expected Int64Attribute for required int body field")
+	}
+	if intAttr.Required || !intAttr.Optional {
+		t.Fatalf("required int body field must be Optional, got %#v", intAttr)
+	}
+}
+
 func TestGenericResourceConfigureAndWrappers(t *testing.T) {
 	r := &GenericResource{group: ResourceGroup{TypeName: "sample"}}
 

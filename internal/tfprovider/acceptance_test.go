@@ -2365,16 +2365,12 @@ func TestAccRealAPI_ResourceRepoDeployKeys_CRUD(t *testing.T) {
 					resource.TestCheckResourceAttrSet("bitbucket_repo_deploy_keys.test", "api_response"),
 				),
 			},
-			// Update: change the label
+			// Re-plan with the same config: must be empty (idempotent). Deploy
+			// keys are immutable — Bitbucket rejects modifying an access key's
+			// contents ("delete and re-add"), so the resource supports
+			// create/read/delete, not in-place update.
 			{
-				Config: testAccRepoDeployKeysConfig(workspace, projectKey, repoSlug, sshPubKey, "tf-test-key-updated"),
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("bitbucket_repo_deploy_keys.test", "id"),
-				),
-			},
-			// Re-plan: must be empty
-			{
-				Config:   testAccRepoDeployKeysConfig(workspace, projectKey, repoSlug, sshPubKey, "tf-test-key-updated"),
+				Config:   testAccRepoDeployKeysConfig(workspace, projectKey, repoSlug, sshPubKey, "tf-test-key"),
 				PlanOnly: true,
 			},
 		},
@@ -2818,8 +2814,11 @@ func TestAccRealAPI_ResourceBranchingModel_CRUD(t *testing.T) {
 				),
 			},
 			// Update: point development at an explicit branch instead of main.
+			// Seed a commit on main first so the branch physically exists —
+			// the API rejects development.name pointing at a non-existent branch.
 			{
-				Config: testAccBranchingModelConfig(workspace, projectKey, repoSlug, false),
+				PreConfig: func() { testAccCommitPipelinesYAML(t, workspace, repoSlug) },
+				Config:    testAccBranchingModelConfig(workspace, projectKey, repoSlug, false),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("bitbucket_branching_model.test", "id"),
 				),

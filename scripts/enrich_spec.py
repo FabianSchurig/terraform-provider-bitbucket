@@ -85,21 +85,16 @@ REQUEST_BODY_PATCHES: dict[tuple[str, str], dict] = {
         "description": "The updated branching model configuration",
         "required": False,
     },
-    # repository deploy keys — the add (POST) and update (PUT) operations omit
-    # their requestBody in the live spec, so HasBody=false and key/label are
-    # unreachable except via the raw request_body.
+    # repository deploy keys — the add (POST) operation omits its requestBody in
+    # the live spec, so HasBody=false and create sends an empty body (400). Only
+    # the POST is patched: Bitbucket rejects `key` on the update PUT ("you can't
+    # modify the contents of an access key"), and adding a body there would send
+    # the immutable key on every update. Deploy keys are effectively immutable.
     ("post", "/repositories/{workspace}/{repo_slug}/deploy-keys"): {
         "content": {
             "application/json": {"schema": {"$ref": "#/components/schemas/deploy_key"}}
         },
         "description": "The deploy key to add",
-        "required": False,
-    },
-    ("put", "/repositories/{workspace}/{repo_slug}/deploy-keys/{key_id}"): {
-        "content": {
-            "application/json": {"schema": {"$ref": "#/components/schemas/deploy_key"}}
-        },
-        "description": "The deploy key to update",
         "required": False,
     },
 }
