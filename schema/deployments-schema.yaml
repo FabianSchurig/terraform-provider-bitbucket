@@ -128,6 +128,13 @@ paths:
       x-atlassian-auth-types:
       - api-token
       operationId: addARepositoryDeployKey
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deploy_key'
+        description: The deploy key to add
+        required: false
     parameters:
     - name: repo_slug
       in: path
@@ -300,6 +307,13 @@ paths:
       x-atlassian-auth-types:
       - api-token
       operationId: updateARepositoryDeployKey
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deploy_key'
+        description: The deploy key to update
+        required: false
     parameters:
     - name: key_id
       in: path

@@ -53,25 +53,18 @@ resource "bitbucket_repo_deploy_keys" "example" {
 
 ### Optional
 - `key_id` (String) Path parameter (auto-populated from API response).
-
-### Read-Only
-
-- `id` (String) Resource identifier (extracted from API response).
-- `api_response` (String) The raw JSON response from the Bitbucket API.
-- `added_on` (String) added_on
-- `comment` (String) The comment parsed from the deploy key (if present)
-- `key` (String) The deploy key value.
-- `label` (String) The user-defined label for the deploy key
-- `last_used` (String) last_used
-- `owner` (Object) owner
+- `added_on` (String) added_on (also computed from API response)
+- `comment` (String) The comment parsed from the deploy key (if present) (also computed from API response)
+- `key` (String) The deploy key value. (also computed from API response)
+- `label` (String) The user-defined label for the deploy key (also computed from API response)
+- `last_used` (String) last_used (also computed from API response)
+- `owner` (Object) owner (also computed from API response)
   Nested schema:
-  - `created_on` (String) created_on
   - `display_name` (String) display_name
   - `uuid` (String) uuid
 
-- `repository` (Object) repository
+- `repository` (Object) repository (also computed from API response)
   Nested schema:
-  - `created_on` (String) created_on
   - `description` (String) description
   - `fork_policy` (String) 
   - `full_name` (String) The concatenation of the repository owner's username and the slugified name, e.g. "evzijst/interruptingcow". This is the same string used in Bitbucket URLs.
@@ -82,6 +75,11 @@ resource "bitbucket_repo_deploy_keys" "example" {
   - `name` (String) name
   - `scm` (String) [git]
   - `size` (String) size
-  - `updated_on` (String) updated_on
   - `uuid` (String) The repository's immutable id. This can be used as a substitute for the slug segment in URLs. Doing this guarantees your URLs will survive renaming of the repository by its owner, or even transfer of the repository to a different user.
 
+- `request_body` (String) Raw JSON request body for create/update operations. Use `jsonencode({...})` to pass fields not exposed as individual attributes.
+
+### Read-Only
+
+- `id` (String) Resource identifier (extracted from API response).
+- `api_response` (String) The raw JSON response from the Bitbucket API.

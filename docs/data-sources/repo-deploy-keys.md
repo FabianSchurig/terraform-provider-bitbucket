@@ -56,13 +56,11 @@ output "repo_deploy_keys_response" {
 - `last_used` (String) last_used
 - `owner` (Object) owner
   Nested schema:
-  - `created_on` (String) created_on
   - `display_name` (String) display_name
   - `uuid` (String) uuid
 
 - `repository` (Object) repository
   Nested schema:
-  - `created_on` (String) created_on
   - `description` (String) description
   - `fork_policy` (String) 
   - `full_name` (String) The concatenation of the repository owner's username and the slugified name, e.g. "evzijst/interruptingcow". This is the same string used in Bitbucket URLs.
@@ -73,6 +71,5 @@ output "repo_deploy_keys_response" {
   - `name` (String) name
   - `scm` (String) [git]
   - `size` (String) size
-  - `updated_on` (String) updated_on
   - `uuid` (String) The repository's immutable id. This can be used as a substitute for the slug segment in URLs. Doing this guarantees your URLs will survive renaming of the repository by its owner, or even transfer of the repository to a different user.
 
