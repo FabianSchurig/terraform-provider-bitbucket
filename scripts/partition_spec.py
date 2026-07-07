@@ -559,6 +559,44 @@ def extract_paths_explicit(spec: dict, paths: list[str]) -> dict:
     return out_paths
 
 
+def inline_request_body_refs(paths: dict, spec: dict) -> int:
+    """Inline operation ``requestBody`` ``$ref``s into self-contained objects.
+
+    Bitbucket references some request bodies via
+    ``requestBody: {$ref: '#/components/requestBodies/X'}`` (e.g. project
+    create/update). ``build_schema`` only copies ``components/schemas`` into the
+    partitioned output, so such a reference would dangle and the Go generator —
+    which reads ``requestBody.content.schema.$ref`` — would see no body fields,
+    emitting only the raw ``request_body`` escape hatch.
+
+    Replacing the reference with a deep copy of the referenced requestBody
+    object makes it look like the inline bodies Bitbucket uses elsewhere (e.g.
+    repositories). The subsequent ``collect_refs`` pass then picks up the nested
+    ``components/schemas`` ``$ref`` and copies it normally. Returns the number of
+    request bodies inlined.
+    """
+    request_bodies = spec.get("components", {}).get("requestBodies", {})
+    inlined = 0
+    for path_item in paths.values():
+        if not isinstance(path_item, dict):
+            continue
+        for method, op in path_item.items():
+            if method not in HTTP_METHODS or not isinstance(op, dict):
+                continue
+            rb = op.get("requestBody")
+            if not isinstance(rb, dict):
+                continue
+            ref = rb.get("$ref", "")
+            if not ref.startswith("#/components/requestBodies/"):
+                continue
+            target = request_bodies.get(ref.rsplit("/", 1)[-1])
+            if target is None:
+                continue
+            op["requestBody"] = copy.deepcopy(target)
+            inlined += 1
+    return inlined
+
+
 def build_schema(spec: dict, group: dict) -> dict:
     """Build a self-contained schema for a single command group."""
     version = spec.get("info", {}).get("version", "2.0.0")
@@ -584,6 +622,11 @@ def build_schema(spec: dict, group: dict) -> dict:
     if not out["paths"]:
         print(f"Warning: no paths found for group '{group['title']}'",
               file=sys.stderr)
+
+    # Inline requestBody `$ref`s (e.g. project create/update) so the nested
+    # schema ref is picked up by collect_refs below and the generators see the
+    # body fields instead of a dangling components/requestBodies reference.
+    inline_request_body_refs(out["paths"], spec)
 
     # Collect all $refs referenced by those paths
     refs: set = set()

@@ -36,4 +36,5 @@ resource "bitbucket_project_user_permissions" "test" {
   project_key = var.project_key
   selected_user_id = var.selected_user_id
   workspace = var.workspace
+  permission = "example-value"
 }

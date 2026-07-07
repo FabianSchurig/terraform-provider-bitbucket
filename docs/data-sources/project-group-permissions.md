@@ -55,7 +55,6 @@ output "project_group_permissions_response" {
   - `name` (String) name
   - `slug` (String) The "sluggified" version of the group's name. This contains only ASCII
 
-- `permission` (String) [read, write, create-repo, admin, none]
 - `project` (Object) project
   Nested schema:
   - `created_on` (String) created_on

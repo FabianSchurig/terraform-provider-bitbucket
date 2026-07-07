@@ -43,6 +43,7 @@ resource "bitbucket_project_group_permissions" "example" {
   group_slug = "developers"
   project_key = "PROJ"
   workspace = "my-workspace"
+  permission = "example-value"
 }
 ```
 
@@ -52,6 +53,7 @@ resource "bitbucket_project_group_permissions" "example" {
 - `group_slug` (String) Path parameter.
 - `project_key` (String) Path parameter.
 - `workspace` (String) Path parameter.
+- `permission` (String) [read, write, create-repo, admin]
 
 ### Optional
 - `request_body` (String) Raw JSON request body for create/update operations. Use `jsonencode({...})` to pass fields not exposed as individual attributes.
@@ -66,7 +68,6 @@ resource "bitbucket_project_group_permissions" "example" {
   - `name` (String) name
   - `slug` (String) The "sluggified" version of the group's name. This contains only ASCII
 
-- `permission` (String) [read, write, create-repo, admin, none]
 - `project` (Object) project
   Nested schema:
   - `created_on` (String) created_on

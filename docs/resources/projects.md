@@ -51,6 +51,17 @@ resource "bitbucket_projects" "example" {
 
 ### Optional
 - `project_key` (String) Path parameter (auto-populated from API response).
+- `description` (String) description (also computed from API response)
+- `has_publicly_visible_repos` (String)  (also computed from API response)
+- `is_private` (String)  (also computed from API response)
+- `key` (String) The project's key. (also computed from API response)
+- `name` (String) The name of the project. (also computed from API response)
+- `owner` (Object) owner (also computed from API response)
+  Nested schema:
+  - `display_name` (String) display_name
+  - `uuid` (String) uuid
+
+- `uuid` (String) The project's immutable id. (also computed from API response)
 - `request_body` (String) Raw JSON request body for create/update operations. Use `jsonencode({...})` to pass fields not exposed as individual attributes.
 
 ### Read-Only
@@ -58,16 +69,4 @@ resource "bitbucket_projects" "example" {
 - `id` (String) Resource identifier (extracted from API response).
 - `api_response` (String) The raw JSON response from the Bitbucket API.
 - `created_on` (String) created_on
-- `description` (String) description
-- `has_publicly_visible_repos` (String) 
-- `is_private` (String) 
-- `key` (String) The project's key.
-- `name` (String) The name of the project.
-- `owner` (Object) owner
-  Nested schema:
-  - `created_on` (String) created_on
-  - `display_name` (String) display_name
-  - `uuid` (String) uuid
-
 - `updated_on` (String) updated_on
-- `uuid` (String) The project's immutable id.

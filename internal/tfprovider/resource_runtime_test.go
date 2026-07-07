@@ -596,6 +596,13 @@ func TestResourceIDHelpers(t *testing.T) {
 	if val, ok := responseParamValue(map[string]any{"id": float64(123), "key": "ssh-ed25519 AAAA", "label": "x"}, "key_id"); !ok || val != "123" {
 		t.Fatalf("expected key_id to resolve to id, got %q ok=%v", val, ok)
 	}
+	// A "{resource}_key" path param (e.g. project_key) must resolve to the
+	// response's "key" field, not fall through to extractID and pick up the
+	// resource "uuid" (issue #111 follow-up: project create → post-create read
+	// 404 when project_key was populated with the UUID).
+	if val, ok := responseParamValue(map[string]any{"uuid": "{abc}", "key": "PROJ", "name": "Proj"}, "project_key"); !ok || val != "PROJ" {
+		t.Fatalf("expected project_key to resolve to key, got %q ok=%v", val, ok)
+	}
 	if val, ok := responseParamValue(map[string]any{"name": "demo"}, "missing"); !ok || val != "demo" {
 		t.Fatalf("expected extractID fallback, got %q ok=%v", val, ok)
 	}

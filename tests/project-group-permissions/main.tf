@@ -36,4 +36,5 @@ resource "bitbucket_project_group_permissions" "test" {
   group_slug = var.group_slug
   project_key = var.project_key
   workspace = var.workspace
+  permission = "example-value"
 }

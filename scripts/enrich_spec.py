@@ -9,6 +9,7 @@ This is deterministic and stable as long as Atlassian doesn't rename summaries
 Usage: python3 enrich_spec.py <input.json> <output.json>
 """
 
+import copy
 import json
 import re
 import sys
@@ -39,6 +40,53 @@ def path_slug(path: str, method: str) -> str:
     """/repositories/{workspace}/{repo_slug}/pullrequests' + 'get' -> 'getRepositoriesPullrequests'"""
     parts = [p for p in path.split("/") if p and not p.startswith("{")]
     return method.lower() + "".join(p.title() for p in parts)
+
+
+# ─── Missing requestBody patches ──────────────────────────────────────────────
+# Bitbucket's published OpenAPI spec omits the requestBody on a handful of write
+# operations even though the endpoints accept a body. Without a requestBody the
+# generators emit HasBody=false and the CLI/MCP/Terraform layers expose no typed
+# body fields — only the raw `request_body`/`--body` escape hatch. Injecting the
+# body here (before partitioning) is the maintainable fix: it re-applies on every
+# schema-sync run, whereas hand-editing schema/*-schema.yaml is silently
+# overwritten by the daily partition_spec.py --all regeneration.
+#
+# Keyed by (method, path). Values are OpenAPI requestBody objects; a $ref to an
+# existing components/requestBodies entry is preferred so the injected body stays
+# in sync with the schema Atlassian does publish for sibling operations.
+REQUEST_BODY_PATCHES: dict[tuple[str, str], dict] = {
+    # createAProjectInAWorkspace — POST /workspaces/{workspace}/projects has no
+    # requestBody in the live spec, yet it accepts the same project body as the
+    # sibling PUT updateAProjectForAWorkspace. Reuse the published
+    # requestBodies/project component so key/name/description/is_private become
+    # typed fields instead of requiring jsonencode(...).
+    ("post", "/workspaces/{workspace}/projects"): {
+        "$ref": "#/components/requestBodies/project"
+    },
+}
+
+
+def apply_request_body_patches(spec: dict) -> int:
+    """Inject requestBody objects for operations the live spec leaves bodyless.
+
+    Applies each entry in REQUEST_BODY_PATCHES only when the target operation
+    exists and does not already declare a requestBody. When a patch is a $ref
+    into components/requestBodies, it is skipped unless the referenced component
+    is present, so partitioning never encounters a dangling reference.
+    """
+    request_bodies = spec.get("components", {}).get("requestBodies", {})
+    applied = 0
+    for (method, path), body in REQUEST_BODY_PATCHES.items():
+        op = spec.get("paths", {}).get(path, {}).get(method)
+        if not op or op.get("requestBody"):
+            continue
+        ref = body.get("$ref", "")
+        if ref.startswith("#/components/requestBodies/"):
+            if ref.rsplit("/", 1)[-1] not in request_bodies:
+                continue
+        op["requestBody"] = copy.deepcopy(body)
+        applied += 1
+    return applied
 
 
 def main():
@@ -83,8 +131,12 @@ def main():
             else:
                 seen[oid] = (path, method)
 
+    patched = apply_request_body_patches(spec)
+
     output_path.write_text(json.dumps(spec, indent=2))
     print(f"Enriched {count} operations, wrote to {output_path}")
+    if patched:
+        print(f"Injected {patched} missing requestBody object(s)")
 
 
 if __name__ == "__main__":

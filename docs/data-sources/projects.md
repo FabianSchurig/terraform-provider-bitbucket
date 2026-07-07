@@ -48,6 +48,7 @@ output "projects_response" {
 - `id` (String) Resource identifier.
 - `api_response` (String) The raw JSON response from the Bitbucket API.
 - `created_on` (String) created_on
+- `updated_on` (String) updated_on
 - `description` (String) description
 - `has_publicly_visible_repos` (String) 
 - `is_private` (String) 
@@ -55,9 +56,7 @@ output "projects_response" {
 - `name` (String) The name of the project.
 - `owner` (Object) owner
   Nested schema:
-  - `created_on` (String) created_on
   - `display_name` (String) display_name
   - `uuid` (String) uuid
 
-- `updated_on` (String) updated_on
 - `uuid` (String) The project's immutable id.

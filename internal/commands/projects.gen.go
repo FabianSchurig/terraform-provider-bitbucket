@@ -113,8 +113,16 @@ func newProjectsListProjectsInAWorkspaceCmd() *cobra.Command {
 // operationId: createAProjectInAWorkspace
 func newProjectsCreateAProjectInAWorkspaceCmd() *cobra.Command {
 	var (
-		workspace string
-		body      string
+		workspace                   string
+		bodyDescription             string
+		bodyHasPubliclyVisibleRepos bool
+		bodyIsPrivate               bool
+		bodyKey                     string
+		bodyName                    string
+		bodyOwnerDisplayName        string
+		bodyOwnerUuid               string
+		bodyUuid                    string
+		body                        string
 	)
 
 	cmd := &cobra.Command{
@@ -136,6 +144,30 @@ func newProjectsCreateAProjectInAWorkspaceCmd() *cobra.Command {
 			queryParams := map[string]string{}
 			if body == "" {
 				bodyObj := map[string]any{}
+				if bodyDescription != "" {
+					handlers.SetNested(bodyObj, "description", bodyDescription)
+				}
+				if cmd.Flags().Changed("has-publicly-visible-repos") {
+					handlers.SetNested(bodyObj, "has_publicly_visible_repos", bodyHasPubliclyVisibleRepos)
+				}
+				if cmd.Flags().Changed("is-private") {
+					handlers.SetNested(bodyObj, "is_private", bodyIsPrivate)
+				}
+				if bodyKey != "" {
+					handlers.SetNested(bodyObj, "key", bodyKey)
+				}
+				if bodyName != "" {
+					handlers.SetNested(bodyObj, "name", bodyName)
+				}
+				if bodyOwnerDisplayName != "" {
+					handlers.SetNested(bodyObj, "owner.display_name", bodyOwnerDisplayName)
+				}
+				if bodyOwnerUuid != "" {
+					handlers.SetNested(bodyObj, "owner.uuid", bodyOwnerUuid)
+				}
+				if bodyUuid != "" {
+					handlers.SetNested(bodyObj, "uuid", bodyUuid)
+				}
 				if len(bodyObj) > 0 {
 					b, _ := json.Marshal(bodyObj)
 					body = string(b)
@@ -152,6 +184,19 @@ func newProjectsCreateAProjectInAWorkspaceCmd() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&workspace, "workspace", "", "workspace (path parameter)")
+	cmd.Flags().StringVar(&bodyDescription, "description", "", `description`)
+	cmd.Flags().BoolVar(&bodyHasPubliclyVisibleRepos, "has-publicly-visible-repos", false, `
+Indicates whether the project contains publicly visible repositories.
+Note that private projects cannot contain public repositories.`)
+	cmd.Flags().BoolVar(&bodyIsPrivate, "is-private", false, `
+Indicates whether the project is publicly accessible, or whether it is
+private to the team and consequently only visible to team members.
+Note that private projects cannot contain public repositories.`)
+	cmd.Flags().StringVar(&bodyKey, "key", "", `The project's key.`)
+	cmd.Flags().StringVar(&bodyName, "name", "", `The name of the project.`)
+	cmd.Flags().StringVar(&bodyOwnerDisplayName, "owner-display-name", "", `display_name`)
+	cmd.Flags().StringVar(&bodyOwnerUuid, "owner-uuid", "", `uuid`)
+	cmd.Flags().StringVar(&bodyUuid, "uuid", "", `The project's immutable id.`)
 	cmd.Flags().StringVar(&body, "body", "", "Raw JSON request body (advanced)")
 	return cmd
 }
@@ -205,9 +250,17 @@ func newProjectsGetAProjectForAWorkspaceCmd() *cobra.Command {
 // operationId: updateAProjectForAWorkspace
 func newProjectsUpdateAProjectForAWorkspaceCmd() *cobra.Command {
 	var (
-		projectKey string
-		workspace  string
-		body       string
+		projectKey                  string
+		workspace                   string
+		bodyDescription             string
+		bodyHasPubliclyVisibleRepos bool
+		bodyIsPrivate               bool
+		bodyKey                     string
+		bodyName                    string
+		bodyOwnerDisplayName        string
+		bodyOwnerUuid               string
+		bodyUuid                    string
+		body                        string
 	)
 
 	cmd := &cobra.Command{
@@ -233,6 +286,30 @@ func newProjectsUpdateAProjectForAWorkspaceCmd() *cobra.Command {
 			queryParams := map[string]string{}
 			if body == "" {
 				bodyObj := map[string]any{}
+				if bodyDescription != "" {
+					handlers.SetNested(bodyObj, "description", bodyDescription)
+				}
+				if cmd.Flags().Changed("has-publicly-visible-repos") {
+					handlers.SetNested(bodyObj, "has_publicly_visible_repos", bodyHasPubliclyVisibleRepos)
+				}
+				if cmd.Flags().Changed("is-private") {
+					handlers.SetNested(bodyObj, "is_private", bodyIsPrivate)
+				}
+				if bodyKey != "" {
+					handlers.SetNested(bodyObj, "key", bodyKey)
+				}
+				if bodyName != "" {
+					handlers.SetNested(bodyObj, "name", bodyName)
+				}
+				if bodyOwnerDisplayName != "" {
+					handlers.SetNested(bodyObj, "owner.display_name", bodyOwnerDisplayName)
+				}
+				if bodyOwnerUuid != "" {
+					handlers.SetNested(bodyObj, "owner.uuid", bodyOwnerUuid)
+				}
+				if bodyUuid != "" {
+					handlers.SetNested(bodyObj, "uuid", bodyUuid)
+				}
 				if len(bodyObj) > 0 {
 					b, _ := json.Marshal(bodyObj)
 					body = string(b)
@@ -250,6 +327,19 @@ func newProjectsUpdateAProjectForAWorkspaceCmd() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&projectKey, "project-key", "", "project_key (path parameter)")
 	cmd.Flags().StringVar(&workspace, "workspace", "", "workspace (path parameter)")
+	cmd.Flags().StringVar(&bodyDescription, "description", "", `description`)
+	cmd.Flags().BoolVar(&bodyHasPubliclyVisibleRepos, "has-publicly-visible-repos", false, `
+Indicates whether the project contains publicly visible repositories.
+Note that private projects cannot contain public repositories.`)
+	cmd.Flags().BoolVar(&bodyIsPrivate, "is-private", false, `
+Indicates whether the project is publicly accessible, or whether it is
+private to the team and consequently only visible to team members.
+Note that private projects cannot contain public repositories.`)
+	cmd.Flags().StringVar(&bodyKey, "key", "", `The project's key.`)
+	cmd.Flags().StringVar(&bodyName, "name", "", `The name of the project.`)
+	cmd.Flags().StringVar(&bodyOwnerDisplayName, "owner-display-name", "", `display_name`)
+	cmd.Flags().StringVar(&bodyOwnerUuid, "owner-uuid", "", `uuid`)
+	cmd.Flags().StringVar(&bodyUuid, "uuid", "", `The project's immutable id.`)
 	cmd.Flags().StringVar(&body, "body", "", "Raw JSON request body (advanced)")
 	return cmd
 }
@@ -617,10 +707,11 @@ func newProjectsGetAnExplicitGroupPermissionForAProjectCmd() *cobra.Command {
 // operationId: updateAnExplicitGroupPermissionForAProject
 func newProjectsUpdateAnExplicitGroupPermissionForAProjectCmd() *cobra.Command {
 	var (
-		groupSlug  string
-		projectKey string
-		workspace  string
-		body       string
+		groupSlug      string
+		projectKey     string
+		workspace      string
+		bodyPermission string
+		body           string
 	)
 
 	cmd := &cobra.Command{
@@ -650,6 +741,9 @@ func newProjectsUpdateAnExplicitGroupPermissionForAProjectCmd() *cobra.Command {
 			queryParams := map[string]string{}
 			if body == "" {
 				bodyObj := map[string]any{}
+				if bodyPermission != "" {
+					handlers.SetNested(bodyObj, "permission", bodyPermission)
+				}
 				if len(bodyObj) > 0 {
 					b, _ := json.Marshal(bodyObj)
 					body = string(b)
@@ -668,6 +762,7 @@ func newProjectsUpdateAnExplicitGroupPermissionForAProjectCmd() *cobra.Command {
 	cmd.Flags().StringVar(&groupSlug, "group-slug", "", "group_slug (path parameter)")
 	cmd.Flags().StringVar(&projectKey, "project-key", "", "project_key (path parameter)")
 	cmd.Flags().StringVar(&workspace, "workspace", "", "workspace (path parameter)")
+	cmd.Flags().StringVar(&bodyPermission, "permission", "", `[read, write, create-repo, admin]`)
 	cmd.Flags().StringVar(&body, "body", "", "Raw JSON request body (advanced)")
 	return cmd
 }
@@ -838,6 +933,7 @@ func newProjectsUpdateAnExplicitUserPermissionForAProjectCmd() *cobra.Command {
 		projectKey     string
 		selectedUserId string
 		workspace      string
+		bodyPermission string
 		body           string
 	)
 
@@ -868,6 +964,9 @@ func newProjectsUpdateAnExplicitUserPermissionForAProjectCmd() *cobra.Command {
 			queryParams := map[string]string{}
 			if body == "" {
 				bodyObj := map[string]any{}
+				if bodyPermission != "" {
+					handlers.SetNested(bodyObj, "permission", bodyPermission)
+				}
 				if len(bodyObj) > 0 {
 					b, _ := json.Marshal(bodyObj)
 					body = string(b)
@@ -886,6 +985,7 @@ func newProjectsUpdateAnExplicitUserPermissionForAProjectCmd() *cobra.Command {
 	cmd.Flags().StringVar(&projectKey, "project-key", "", "project_key (path parameter)")
 	cmd.Flags().StringVar(&selectedUserId, "selected-user-id", "", "selected_user_id (path parameter)")
 	cmd.Flags().StringVar(&workspace, "workspace", "", "workspace (path parameter)")
+	cmd.Flags().StringVar(&bodyPermission, "permission", "", `[read, write, create-repo, admin]`)
 	cmd.Flags().StringVar(&body, "body", "", "Raw JSON request body (advanced)")
 	return cmd
 }

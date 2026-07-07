@@ -1679,6 +1679,15 @@ func responseParamValue(m map[string]any, paramName string) (string, bool) {
 		base := strings.TrimSuffix(paramName, "_id")
 		tryKeys = append(tryKeys, "id", base)
 	}
+	// A "{resource}_key" path param (e.g. project_key) is keyed by the
+	// response's "key" field, not the resource UUID. Without this, the loop
+	// below fails to find "project_key" in the response and falls through to
+	// extractID, which returns the project's "uuid" — populating project_key
+	// with the UUID and 404ing every subsequent Read/Update/Delete.
+	if strings.HasSuffix(paramName, "_key") {
+		base := strings.TrimSuffix(paramName, "_key")
+		tryKeys = append(tryKeys, "key", base)
+	}
 	for _, key := range tryKeys {
 		if key == "" {
 			continue
