@@ -4351,6 +4351,7 @@ components:
           links:
             $ref: '#/components/schemas/pipelines_pipeline_links'
       x-bb-batch-url: /rest/1.0/accounts/{target_user.uuid}/repositories/{repository.uuid}/pipelines/pipelines_batch
+      x-bb-batch-max-size: 100
     pipeline_build_number:
       allOf:
       - $ref: '#/components/schemas/object'
